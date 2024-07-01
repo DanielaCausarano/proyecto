@@ -10,6 +10,8 @@ import colorama
 import getpass #para que no se muestre la contraseña mientras estas escribiendo.
 import datetime
 import json
+Usuario= ""
+Clave= ""
 
 def limpiarpantalla():
     '''
@@ -34,11 +36,7 @@ def verificar_persona():
     Retorno: si retorna, bool (True si la verificación es exitosa, False en caso contrario)
 
     '''
-    Usuario= "Grupo16"
-    Clave= "C@C2024"
-
-    print()
-
+    global Usuario, Clave
     i=3
     while i > 0:
         usu=input(("Ingrese usuario: ").rjust(65," "))
@@ -81,6 +79,49 @@ def menu():
         print("¡ERROR!")
     return op
 
+def cargar_datosUsuCla():
+    '''
+    Función cargar_datosUsuCla()
+    Autores: Causarano Daniela, More Julieta
+    Fecha: 2024
+    Version 1.0
+    Parametros: no requiere 
+    Retorno: sí retorna, lista vacía
+
+    '''
+    try:
+        with open("usuario y clave.json","r") as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return []
+    
+def guardar_datosUsu(Usuario):
+    '''
+    Función guardar_datosUsuCla(usuario)
+    Autores: Causarano Daniela, More Julieta
+    Fecha: 2024
+    Version 1.0
+    Parametros: sí requiere (1)
+    Retorno: no
+
+    '''
+    with open("usuario y clave.json","w") as file:
+        json.dump(Usuario, file, indent=4)
+        return
+    
+def guardar_datosCla(Clave):
+    '''
+    Función guardar_datosCla(clave)
+    Autores: Causarano Daniela, More Julieta
+    Fecha: 2024
+    Version 1.0
+    Parametros: sí requiere (1)
+    Retorno: no
+
+    '''
+    with open("usuario y clave.json","w") as file:
+        json.dump(Clave, file, indent=4)
+        return
 
 def perfil():
     '''
@@ -92,6 +133,12 @@ def perfil():
     Retorno: no
 
     '''
+    limpiarpantalla()
+    print()
+    print(colorama.Fore.RED + "¡ATENCIÓN! Debe registrarse para poder acceder al menú")
+    print()
+    print()
+
     nomCom=(input("Ingresa tu nombre completo: ").title())
     mail=input("Ingresa tu correo electrónico: ")
     nTel=int(input("Ingresa tu número de célular: "))
@@ -118,7 +165,9 @@ Nombre: {nomCom}\nCorreo: {mail}\nCélular: {nTel}""")
 Elija la opcion que desea modificar: 
     A) Nombre Completo
     B) Correo Electrónico
-    C) Número de Célular  
+    C) Número de Célular
+    D) Usuario
+    E) Contraseña
     """).upper())
             
             match rta2:
@@ -137,6 +186,28 @@ Elija la opcion que desea modificar:
                     print("¡Número de celular modificado correctamente!") 
                     configuracion["Célular"]=nroTel
                     break
+                case "D":
+                    try:
+                        global Usuario
+                        Usuario=(input("Ingrese el nuevo usuario: "))
+                        print("Usuario modificado con éxito!!")
+                        guardar_datosUsu(Usuario)
+                    except ValueError:
+                        print("""
+                              ERROR!
+                              Ingrese letras o números""")
+                    break
+                case "E":
+                    try:
+                        global Clave
+                        Clave=int(input("Ingrese la nueva contraseña: "))
+                        print("Usuario modificado con éxito!!")
+                        guardar_datosCla(Clave)
+                    except ValueError:
+                        print("""
+                              ERROR!
+                              Ingrese letras o números""")
+                    break
                 case _: 
                     print("Opción no válida.")
         elif rta == 2:
@@ -148,11 +219,8 @@ Elija la opcion que desea modificar:
             break
      
     return
-# ver si se puede hacer que dsp de verificar se abra el perfil
-# ver si se puede agregar la opcion de cambiar usuario y contraseña
-# deberiamos agregar try except
-# volver a revisar porque no se guarda mas de un dic de datos
-# agregar condicional si ya existe los datos solo mostrarlos
+# ver como hacer para que acepte el usuario y clave que la persona cambio, al ingresar al programa.
+
     
 
 def cargar_datosSaldo():
@@ -337,8 +405,10 @@ colorama.init()
 saldo=cargar_datosSaldo()
 nuevo_contacto=cargar_datosContactos()
 
-if verificar_persona():
-    while True:
+if verificar_persona() == True:
+    perfil()
+   
+while True:
         op = menu()
         if op == 1:
             print("Perfil")
