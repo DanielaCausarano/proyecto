@@ -10,8 +10,7 @@ import colorama
 import getpass #para que no se muestre la contraseña mientras estas escribiendo.
 import datetime
 import json
-Usuario= ""
-Clave= ""
+
 
 def limpiarpantalla():
     '''
@@ -26,6 +25,8 @@ def limpiarpantalla():
     os.system('cls' if os.name == 'nt' else 'clear')
     return
 
+Usuario="Grupo16"
+Clave="CAC2024"
 def verificar_persona():
     '''
     Función verificar_persona()
@@ -46,9 +47,11 @@ def verificar_persona():
             return True
         else:
             i-=1
+            print()
             print(("Usuario y/o contraseña inválidos".rjust(80," ")))
             print((f"Le quedan {i} intentos").rjust(68," "))
             if i == 0:
+                print()
                 print(("Ha superado el máximo de intentos permitidos. Salga e intentelo de nuevo").rjust(120," "))
                 return False
 def menu():
@@ -79,49 +82,6 @@ def menu():
         print("¡ERROR!")
     return op
 
-def cargar_datosUsuCla():
-    '''
-    Función cargar_datosUsuCla()
-    Autores: Causarano Daniela, More Julieta
-    Fecha: 2024
-    Version 1.0
-    Parametros: no requiere 
-    Retorno: sí retorna, lista vacía
-
-    '''
-    try:
-        with open("usuario y clave.json","r") as file:
-            return json.load(file)
-    except FileNotFoundError:
-        return []
-    
-def guardar_datosUsu(Usuario):
-    '''
-    Función guardar_datosUsuCla(usuario)
-    Autores: Causarano Daniela, More Julieta
-    Fecha: 2024
-    Version 1.0
-    Parametros: sí requiere (1)
-    Retorno: no
-
-    '''
-    with open("usuario y clave.json","w") as file:
-        json.dump(Usuario, file, indent=4)
-        return
-    
-def guardar_datosCla(Clave):
-    '''
-    Función guardar_datosCla(clave)
-    Autores: Causarano Daniela, More Julieta
-    Fecha: 2024
-    Version 1.0
-    Parametros: sí requiere (1)
-    Retorno: no
-
-    '''
-    with open("usuario y clave.json","w") as file:
-        json.dump(Clave, file, indent=4)
-        return
 
 def perfil():
     '''
@@ -135,7 +95,7 @@ def perfil():
     '''
     limpiarpantalla()
     print()
-    print(colorama.Fore.RED + "¡ATENCIÓN! Debe registrarse para poder acceder al menú")
+    print(colorama.Fore.RED + "¡ATENCIÓN! Debe registrarse para poder acceder al menú" + colorama.Fore.RESET)
     print()
     print()
 
@@ -166,8 +126,6 @@ Elija la opcion que desea modificar:
     A) Nombre Completo
     B) Correo Electrónico
     C) Número de Célular
-    D) Usuario
-    E) Contraseña
     """).upper())
             
             match rta2:
@@ -186,28 +144,6 @@ Elija la opcion que desea modificar:
                     print("¡Número de celular modificado correctamente!") 
                     configuracion["Célular"]=nroTel
                     break
-                case "D":
-                    try:
-                        global Usuario
-                        Usuario=(input("Ingrese el nuevo usuario: "))
-                        print("Usuario modificado con éxito!!")
-                        guardar_datosUsu(Usuario)
-                    except ValueError:
-                        print("""
-                              ERROR!
-                              Ingrese letras o números""")
-                    break
-                case "E":
-                    try:
-                        global Clave
-                        Clave=int(input("Ingrese la nueva contraseña: "))
-                        print("Usuario modificado con éxito!!")
-                        guardar_datosCla(Clave)
-                    except ValueError:
-                        print("""
-                              ERROR!
-                              Ingrese letras o números""")
-                    break
                 case _: 
                     print("Opción no válida.")
         elif rta == 2:
@@ -219,9 +155,7 @@ Elija la opcion que desea modificar:
             break
      
     return
-# ver como hacer para que acepte el usuario y clave que la persona cambio, al ingresar al programa.
-
-    
+   
 
 def cargar_datosSaldo():
     '''
@@ -400,15 +334,35 @@ def ver_saldo():
     # tenemos que restar lo que se debita para ver el saldo total
     return
 
+def agenda_fras():
+    limpiarpantalla()
+    Fras1=(input("Ingrese la empresa a la cual pertenece la factura: ").capitalize())    
+    Fras2=(input("Ingrese a que servicio pertenece: ").capitalize())
+    Fras3=float(input("Ingrese el monto a pagar: "))
+    Fras4=input("Ingrese el día que vence: ")
+    fras4 = datetime.datetime.strptime(Fras4, '%d/%m/%Y') # Utilizamos datetime.datetime.strptime para convertir la cadena de texto en un objeto datetime
+    Facturas={}
+    Facturas[Fras2]={
+            "Empresa": Fras1,
+            "Monto": Fras3,
+            "Fecha de vto":fras4
+    }
+    print(Facturas)
+    
+
 #programa principal
+agenda_fras()
 colorama.init()
 saldo=cargar_datosSaldo()
 nuevo_contacto=cargar_datosContactos()
 
-if verificar_persona() == True:
-    perfil()
-   
 while True:
+    if not verificar_persona():
+        break
+    perfil()
+# preguntar porque sigue abriendo.
+
+while perfil() == True:
         op = menu()
         if op == 1:
             print("Perfil")
@@ -443,12 +397,15 @@ while True:
         elif op == 5:
             print("Agenda de Facturas")
             print("-" * 24)
+            agenda_fras()
             input(colorama.Fore.RED + "Presione enter para continuar")
         elif op == 6:
             print("Imprimir resumen de cuenta")
             print("-" * 24)
             input(colorama.Fore.RED + "Presione enter para continuar")
         elif op == 7:
+            print("Saliendo")
+            input(colorama.Fore.RED + "Presione enter para continuar")
             break
         else:
             print("Por favor ingrese una opción válida.")
