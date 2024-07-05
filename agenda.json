@@ -1,0 +1,12 @@
+{
+    "Electricidad": {
+        "Empresa": "Edesur",
+        "Monto": 39000.0,
+        "Fecha de vto": "04/08/2024"
+    },
+    "Gas": {
+        "Empresa": "Seeshep",
+        "Monto": 600.0,
+        "Fecha de vto": "03/07/2024"
+    }
+}

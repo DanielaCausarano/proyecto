@@ -13,6 +13,7 @@ import json
 
 
 def limpiarpantalla():
+
     '''
     Función limpiarpantalla()
     Autores: Causarano Daniela, More Julieta
@@ -25,8 +26,12 @@ def limpiarpantalla():
     os.system('cls' if os.name == 'nt' else 'clear')
     return
 
+
+global Usuario
+global Clave
 Usuario="Grupo16"
 Clave="CAC2024"
+
 def verificar_persona():
     '''
     Función verificar_persona()
@@ -37,7 +42,7 @@ def verificar_persona():
     Retorno: si retorna, bool (True si la verificación es exitosa, False en caso contrario)
 
     '''
-    global Usuario, Clave
+
     i=3
     while i > 0:
         usu=input(("Ingrese usuario: ").rjust(65," "))
@@ -72,8 +77,7 @@ def menu():
     print(colorama.Fore.LIGHTMAGENTA_EX + "3-" + colorama.Fore.RESET + "transferir dinero".capitalize().ljust(40," ") )
     print(colorama.Fore.LIGHTMAGENTA_EX + "4-" + colorama.Fore.RESET + "saldo disponible".capitalize() )
     print(colorama.Fore.LIGHTMAGENTA_EX + "5-" + colorama.Fore.RESET + "agenda de facturas".capitalize() )
-    print(colorama.Fore.LIGHTMAGENTA_EX + "6-" + colorama.Fore.RESET + "imprimir resumen de cuenta".capitalize() )
-    print(colorama.Fore.LIGHTMAGENTA_EX + "7-" + colorama.Fore.RESET + "salir".capitalize() )
+    print(colorama.Fore.LIGHTMAGENTA_EX + "6-" + colorama.Fore.RESET + "salir".capitalize() )
     print(colorama.Fore.RESET + "="*45)
     try:
         op=int(input(colorama.Fore.LIGHTYELLOW_EX + "Seleccione una opción: " + colorama.Fore.RESET))
@@ -93,12 +97,6 @@ def perfil():
     Retorno: no
 
     '''
-    limpiarpantalla()
-    print()
-    print(colorama.Fore.RED + "¡ATENCIÓN! Debe registrarse para poder acceder al menú" + colorama.Fore.RESET)
-    print()
-    print()
-
     nomCom=(input("Ingresa tu nombre completo: ").title())
     mail=input("Ingresa tu correo electrónico: ")
     nTel=int(input("Ingresa tu número de célular: "))
@@ -150,7 +148,8 @@ Elija la opcion que desea modificar:
             limpiarpantalla()
             print(colorama.Fore.BLUE + "CBU: 0040888777532") 
             print(colorama.Fore.BLUE + "Alias: PATO.CONEJO.PERRO")
-            input(colorama.Fore.RED + "Presione enter para continuar")
+            input(colorama.Fore.RED + "Presione enter para continuar" + colorama.Fore.RESET)
+            menu()
         elif rta == 3:
             break
      
@@ -187,7 +186,7 @@ def guardar_datosSaldo(saldo):
         json.dump(saldo, file, indent=4)
         return
 
-Saldo=[] # lo inicializamos afuera de la función para que no se pierdan los datos y pop funcione correctamente
+
 
 def ingresar_dinero(dinero1):
     '''
@@ -242,7 +241,7 @@ def cargar_datosContactos():
     except FileNotFoundError:
         return []
     
-def guardar_datosContactos(nuevo_contacto):
+def guardar_datosContactos(lista_contactos):
     '''
     Función guardar_datosContactos()
     Autores: Causarano Daniela, More Julieta
@@ -252,70 +251,151 @@ def guardar_datosContactos(nuevo_contacto):
     Retorno: no 
 
     '''
-    for key in nuevo_contacto:
-        if isinstance(nuevo_contacto[key], set):
-            nuevo_contacto[key]=list(nuevo_contacto[key])
-
     with open("contactos.json","w") as file:
-        json.dump(nuevo_contacto,file,indent=4)
-        return
+        json.dump(lista_contactos,file,indent=4)
+        return lista_contactos
+    
+def ingresarContacto (): 
+    '''
+    Función ingresarContacto ()
+    Autores: Causarano Daniela, More Julieta
+    Fecha: 2024
+    Version 1.0
+    Parametros: no requiere 
+    Retorno: sí, lista_contactos
 
+    '''
+    nom=input("Ingrese el nombre de su contacto: ")
+    dni=int(input("Ingrese el DNI de su contacto: "))
+    alias=input("Ingrese el alias de su contacto:  ")
+    cbu=int(input("Ingrese el CBU de su contacto: "))
+    contacto={
+        "Nombre": nom,
+        "Alias": alias,
+        "CBU": cbu,
+        "DNI": dni,
+    }
+    lista_contactos.append(contacto)
+    print ("Contacto creado con éxito!!")
+    print (f"Usted realizará una transferencia a {contacto["Nombre"]}")
+    guardar_datosContactos(lista_contactos)
+    return lista_contactos
 
-def transferir_dinero(aliasC, cbuC, dniC, nuevo_contacto):
-        '''
+def opcionesContactos():
+    print ("Seleccione")
+    print ("1, para transferir a un nuevo contacto")
+    print ("2, para transferir a un contacto existente")
+    print ("3, para borrar contacto")
+    print ("4, ver contactos guardados")
+    opcion=input("Indique la opción elegida: ")
+    if opcion=="1":
+        ingresarContacto() 
+        return True
+    elif opcion=="2":
+        dniC=int(input("Ingrese el N° de DNI del contacto: "))
+        for i in range (len(lista_contactos)):
+            if lista_contactos[i]["DNI"] == dniC:
+                for c,v in lista_contactos[i].items():
+                    print (lista_contactos[i])
+                    resp=input("¿Los datos son correctos? s/n: ")
+                    if resp.lower() == "s":
+                        print (f"Usted realizará una transferencia a {lista_contactos[i]["Nombre"]}")
+                        return True
+                    elif resp.lower() == "n":
+                        rta=int(input("""Elija qué quiere modificar:
+                        1) NOMBRE
+                        2) ALIAS 
+                        3) CBU 
+                        4) DNI 
+                        """))
+                        if rta == 1:
+                            nom=input("Ingrese el nombre")
+                            lista_contactos[i]["Nombre"]=nom
+                            print("Nombre modificado con exito!")
+                            break
+                        elif rta== 2:
+                            alias=input("Ingrese el alias de su contacto:  ")
+                            lista_contactos["Alias"]=alias
+                            print("Contacto modificado con exito!")
+                            break
+                        elif rta == 3:
+                            cbu=input("Ingrese el CBU de su contacto: ")
+                            lista_contactos[i]["CBU"]=cbu
+                            print("Contacto modificado con exito!")
+                            break
+                        elif rta == 4:
+                            dni=int(input("Ingrese el DNI de su contacto: "))
+                            lista_contactos[i]["DNI"]=dni
+                            print("Contacto modificado con exito!")
+                            break
+                        else:
+                            print("Opción no válida. Inténtelo de nuevo")
+                    guardar_datosContactos(lista_contactos)
+                    return True
+            else:             
+                print ("DNI no encontrado. Regrese al Menú")
+                return False
+    elif opcion=="3":
+        dni=int(input("Ingrese el N° de DNI del contacto: "))
+        for i in range (len(lista_contactos)):
+            if lista_contactos[i]["DNI"]==dni:
+                for c, v in lista_contactos[i].items():
+                    print (lista_contactos[i])
+                    resp=input("¿Desea borrar el contacto? s/n")
+                    if resp.lower() == "s":
+                        lista_contactos.remove(lista_contactos[i])
+                        print ("Contacto borrado")
+                        guardar_datosContactos(lista_contactos)
+                        return False
+                    elif resp.lower() == "n":
+                        print ("Regrese al Menú")
+                        return False
+            else:
+                print ("DNI no encontrado. Regrese al Menú") 
+                return False        
+    elif opcion=="4":
+        cargar_datosContactos ()
+        print (lista_contactos)
+    else: 
+        print ("Opción incorrecta")   
+        return False
+    
+def transferir_dinero(dinero1):
+    '''
     Función transferir_dinero()
     Autores: Causarano Daniela, More Julieta
     Fecha: 2024
     Version 1.0
-    Parametros: si requiere (4)
+    Parametros: si requiere (1)
     Retorno: si retorna, contactos
 
     '''
-        print(f" Alias: {aliasC}\n CBU: {cbuC}\n DNI: {dniC}")
-        while True:
-            resp=input("¿Es correcto? s/n: ")
-            if resp.lower() == "s":
-                print("Contacto creado con exito!")
-                break
-            elif resp.lower() == "n":
-                rta=int(input("""
-    Elija que quiere modificar: 
-            1) ALIAS 
-            2) CBU 
-            3) DNI 
-            4) Todos los datos:  """)) 
-                if rta == 1:
-                    aliasC=input("Ingrese el alias de su contacto:  ")
-                    nuevo_contacto["Alias"]=aliasC
-                    print("Contacto modificado con exito!")
+    global saldo
+    try:
+        dinero1=float(input("Indique la cantidad de dinero que desea transferir: "))
+        if dinero1 <=0: 
+            print("Debe ingresar una cantidad mayor a $0")
+            print ("Vuelva a intentar")
+        elif dinero1!=0:
+            print(f"Usted ingresó ${dinero1}")
+            dinero1=dinero1*-1 #para convertir dinero en negativo y reste en el saldo
+            saldo.append(dinero1)
+            while True:
+                resp=input("¿Es correcto? s/n: ")
+                if resp.lower() == "s":
+                    print("Transferencia realizada con éxito!!")
                     break
-                elif rta == 2:
-                    cbuC=input("Ingrese el CBU de su contacto: ")
-                    nuevo_contacto["CBU"]=cbuC
-                    print("Contacto modificado con exito!")
-                    break
-                elif rta == 3:
-                    dniC=int(input("Ingrese el DNI de su contacto: "))
-                    nuevo_contacto["DNI"]=dniC
-                    print("Contacto modificado con exito!")
-                    break
-                elif rta == 4:
-                    aliasC=input("Ingrese el alias de su contacto:  ")
-                    emailC=input("Ingrese el CBU de su contacto: ")
-                    dniC=int(input("Ingrese el DNI de su contacto: "))
-                    nuevo_contacto["Alias"]=aliasC
-                    nuevo_contacto["CBU"]=cbuC
-                    nuevo_contacto["DNI"]=dniC
-                    print("Contacto modificado con exito!") 
-                    break 
-                else:
-                    print("Opción no válida. Intentelo de nuevo")
-            else:
-                print("Respuesta no válida.")
-        guardar_datosContactos(nuevo_contacto)
+                elif resp.lower() == "n":
+                    saldo.pop()
+                    dinero1=float(input("Ingrese nuevamente el dinero a transferir: "))
+                    dinero1=dinero1*-1
+                    saldo.append(dinero1)
+                    print("Transferencia realizada con éxito!!")
+            guardar_datosSaldo(saldo)
+            return
+    except ValueError:
+        print("Entrada no válida. Por favor ingrese números.")
         return
-# hay que crear una opcion para ver los contactos guardados y seleccionar uno y transferir.
-# agregar op para borrar contacto.
 
 def ver_saldo():
     '''
@@ -331,82 +411,126 @@ def ver_saldo():
     global saldo
     total_saldo=sum(saldo)
     print(f"Saldo actual: ${total_saldo:.2f}")
-    # tenemos que restar lo que se debita para ver el saldo total
+    input(colorama.Fore.RED + "Presione enter para continuar" + colorama.Fore.RESET)
     return
 
-def agenda_fras():
-    limpiarpantalla()
-    Fras1=(input("Ingrese la empresa a la cual pertenece la factura: ").capitalize())    
-    Fras2=(input("Ingrese a que servicio pertenece: ").capitalize())
-    Fras3=float(input("Ingrese el monto a pagar: "))
-    Fras4=input("Ingrese el día que vence: ")
-    fras4 = datetime.datetime.strptime(Fras4, '%d/%m/%Y') # Utilizamos datetime.datetime.strptime para convertir la cadena de texto en un objeto datetime
-    Facturas={}
-    Facturas[Fras2]={
-            "Empresa": Fras1,
-            "Monto": Fras3,
-            "Fecha de vto":fras4
-    }
-    print(Facturas)
-    
 
+def cargar_datosAgenda():
+    '''
+    Función cargar_datosAgenda()
+    Autores: Causarano Daniela, More Julieta
+    Fecha: 2024
+    Version 1.0
+    Parametros: no requiere 
+    Retorno: sí retorna, lista vacía
+
+    '''
+    try:
+        with open("agenda.json","r") as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return []
+    
+def guardar_datosAgenda(Facturas):
+    '''
+    Función guardar_datosAgenda()
+    Autores: Causarano Daniela, More Julieta
+    Fecha: 2024
+    Version 1.0
+    Parametros: no requiere 
+    Retorno: no 
+
+    '''
+    with open("agenda.json","w") as file:
+        json.dump(Facturas,file,indent=4)
+        return 
+    
+def agenda_fras():
+    '''
+    Función agenda_fras()
+    Autores: Causarano Daniela, More Julieta
+    Fecha: 2024
+    Version 1.0
+    Parametros: no requiere 
+    Retorno: no retorna
+    '''
+    Facturas = cargar_datosAgenda()  
+    print(colorama.Fore.LIGHTCYAN_EX + "1 - Agendar servicios a pagar: ")
+    print(colorama.Fore.LIGHTCYAN_EX + "2 - Ver servicios a pagar: " + colorama.Fore.RESET)
+
+    rta = int(input("Seleccione una opción: "))
+    if rta == 1:
+        while True:
+            Fras1 = input("Ingrese la empresa a la cual pertenece la factura (o 'fin' para salir): ").capitalize()
+            if Fras1.lower() == 'fin':
+                break
+            Fras2 = input("Ingrese a qué servicio pertenece: ").capitalize()
+            Fras3 = float(input("Ingrese el monto a pagar: "))
+            Fras4 = input("Ingrese el día que vence (DD/MM/AAAA): ")
+            fras4 = datetime.datetime.strptime(Fras4, '%d/%m/%Y').strftime('%d/%m/%Y')
+            #Utilizamos datetime.datetime.strptime para convertir la cadena de texto en un objeto datetime
+            Facturas[Fras2] = {
+                "Empresa": Fras1,
+                "Monto": Fras3,
+                "Fecha de vto": fras4
+            }
+            print("¡Factura agendada!")
+
+        guardar_datosAgenda(Facturas) 
+    elif rta == 2:
+        for servicio, datos in Facturas.items():
+            fecha_vto = datetime.datetime.strptime(datos["Fecha de vto"], '%d/%m/%Y') # Convertir de nuevo a datetime
+            print(f"Servicio: {servicio}, Empresa: {datos['Empresa']}, Monto: {datos['Monto']}, Fecha de vto: {fecha_vto.strftime('%d/%m/%Y')}")
+    else:
+        print("Opción no válida.")
+    return
+
+
+    
 #programa principal
-agenda_fras()
 colorama.init()
 saldo=cargar_datosSaldo()
-nuevo_contacto=cargar_datosContactos()
+lista_contactos=cargar_datosContactos()
+dinero1=0
+Saldo=[] # lo inicializamos afuera de la función para que pop funcione correctamente
 
-while True:
-    if not verificar_persona():
-        break
-    perfil()
-# preguntar porque sigue abriendo.
-
-while perfil() == True:
+while verificar_persona() == True:
         op = menu()
         if op == 1:
             print("Perfil")
             print("-" * 24)
             perfil()
-            input(colorama.Fore.RED + "Presione enter para continuar")
+            input(colorama.Fore.RED + "Presione enter para continuar" + colorama.Fore.RESET)
         elif op == 2:
             print("Ingresar dinero a cuenta")
             print("-" * 24)
             dinero1 = float(input("Ingrese la cantidad de dinero a depositar: "))
             ingresar_dinero(dinero1)
-            input(colorama.Fore.RED + "Presione enter para continuar")
+            input(colorama.Fore.RED + "Presione enter para continuar" + colorama.Fore.RESET)
         elif op == 3:
             print("Transferir dinero")
             print("-" * 24)
-            alias=input("Ingrese el alias de su contacto:  ")
-            cbu=int(input("Ingrese el CBU de su contacto: "))
-            dni=int(input("Ingrese el DNI de su contacto: "))
-            nom=input("Ingrese el nombre de su contacto: ")
-            nuevo_contacto[nom]={
-                       "Alias": alias,
-                       "CBU": cbu,
-                       "DNI": dni,
-                    }
-            transferir_dinero(alias, cbu, dni, nuevo_contacto)
-            input(colorama.Fore.RED + "Presione enter para continuar")
+            opcionesContactos()
+            input(colorama.Fore.RED + "Presione enter para continuar"+ colorama.Fore.RESET)
+            limpiarpantalla()
+            while True:
+                transferir_dinero(dinero1)
+                break
+            input(colorama.Fore.RED + "Presione enter para continuar" + colorama.Fore.RESET)
         elif op == 4:
             print("Ver saldo disponible")
             print("-" * 24)
             ver_saldo()
-            input(colorama.Fore.RED + "Presione enter para continuar")
+            input(colorama.Fore.RED + "Presione enter para continuar" + colorama.Fore.RESET)
         elif op == 5:
             print("Agenda de Facturas")
             print("-" * 24)
             agenda_fras()
-            input(colorama.Fore.RED + "Presione enter para continuar")
+            input(colorama.Fore.RED + "Presione enter para continuar" + colorama.Fore.RESET)
         elif op == 6:
-            print("Imprimir resumen de cuenta")
-            print("-" * 24)
-            input(colorama.Fore.RED + "Presione enter para continuar")
-        elif op == 7:
             print("Saliendo")
-            input(colorama.Fore.RED + "Presione enter para continuar")
+            input(colorama.Fore.RED + "Presione enter para continuar" + colorama.Fore.RESET)
             break
         else:
             print("Por favor ingrese una opción válida.")
-            input(colorama.Fore.RED + "Presione enter para continuar")
+            input(colorama.Fore.RED + "Presione enter para continuar" + colorama.Fore.RESET)
