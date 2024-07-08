@@ -354,8 +354,8 @@ def opcionesContactos():
                 print ("DNI no encontrado. Regrese al Menú") 
                 return False        
     elif opcion=="4":
-        cargar_datosContactos ()
         print (lista_contactos)
+        return False
     else: 
         print ("Opción incorrecta")   
         return False
@@ -510,12 +510,9 @@ while verificar_persona() == True:
         elif op == 3:
             print("Transferir dinero")
             print("-" * 24)
-            opcionesContactos()
-            input(colorama.Fore.RED + "Presione enter para continuar"+ colorama.Fore.RESET)
             limpiarpantalla()
-            while True:
+            if opcionesContactos()== True:
                 transferir_dinero(dinero1)
-                break
             input(colorama.Fore.RED + "Presione enter para continuar" + colorama.Fore.RESET)
         elif op == 4:
             print("Ver saldo disponible")
