@@ -5,12 +5,6 @@ Fecha: 2024
 Version 1.0
 
 ''' 
-import os 
-import colorama
-import getpass #para que no se muestre la contraseña mientras estas escribiendo.
-import datetime
-import json
-
 
 def limpiarpantalla():
 
@@ -45,8 +39,8 @@ def verificar_persona():
 
     i=3
     while i > 0:
-        usu=input(("Ingrese usuario: ").rjust(65," "))
-        clave1=getpass.getpass(("Ingrese contraseña: ").rjust(68," "))
+        usu=input((colorama.Fore.LIGHTGREEN_EX +"Ingrese usuario: "+ colorama.Fore.RESET).rjust(65," "))
+        clave1=getpass.getpass((colorama.Fore.LIGHTMAGENTA_EX +"Ingrese contraseña: " + colorama.Fore.RESET).rjust(73," "))
 
         if usu==Usuario and clave1==Clave:
             return True
@@ -92,68 +86,66 @@ def perfil():
     Función Perfil()
     Autores: Causarano Daniela, More Julieta
     Fecha: 2024
-    Version 1.0
-    Parametros: no requiere 
+    Versión 1.0
+    Parámetros: no requiere 
     Retorno: no
-
     '''
-    nomCom=(input("Ingresa tu nombre completo: ").title())
-    mail=input("Ingresa tu correo electrónico: ")
-    nTel=int(input("Ingresa tu número de célular: "))
-    configuracion= {
+    nomCom = (input(colorama.Fore.LIGHTCYAN_EX + "Ingresa tu nombre completo: "+ colorama.Fore.RESET).title())
+    mail = input(colorama.Fore.LIGHTCYAN_EX + "Ingresa tu correo electrónico: "+ colorama.Fore.RESET)
+    nTel = int(input(colorama.Fore.LIGHTCYAN_EX + "Ingresa tu número de celular: " + colorama.Fore.RESET))
+    configuracion = {
         "Nombre": nomCom,
         "Correo electrónico": mail,
-        "Célular": nTel
+        "Celular": nTel
     }
-    limpiarpantalla()
-    print(f"""
+    
+    while True:
+        limpiarpantalla()
+        print(f"""
 ¡Bienvenido/a!
-Nombre: {nomCom}\nCorreo: {mail}\nCélular: {nTel}""")
-    print()
-    print()
-    print()
-    rta=int(input("""
+Nombre: {nomCom}\nCorreo: {mail}\nCelular: {nTel}""")
+        print()
+        print()
+        print()
+        rta = int(input("""
 1-Configuración
 2-Ver Datos de Transferencia
 3- Salir 
-""" ))
-    while True:
+"""))
+        
         if rta == 1:
-            rta2=(input("""
-Elija la opcion que desea modificar: 
+            rta2 = input("""
+Elija la opción que desea modificar: 
     A) Nombre Completo
     B) Correo Electrónico
-    C) Número de Célular
-    """).upper())
+    C) Número de Celular
+    """).upper()
             
             match rta2:
                 case "A":
-                   nomCom=input("Ingrese el nuevo nombre completo: ")
-                   print("¡Nombre completo modificado correctamente!") 
-                   configuracion["Nombre"]=nomCom
-                   break
+                    nomCom = input(colorama.Fore.LIGHTCYAN_EX +"Ingrese el nuevo nombre completo: " + colorama.Fore.RESET)
+                    print("¡Nombre completo modificado correctamente!") 
+                    configuracion["Nombre"] = nomCom
                 case "B":
-                    mail=input("Ingrese el nuevo correo electrónico: ")
+                    mail = input(colorama.Fore.LIGHTCYAN_EX +"Ingrese el nuevo correo electrónico: "+ colorama.Fore.RESET)
                     print("¡Correo electrónico modificado correctamente!")
-                    configuracion["Correo electrónico"]=mail
-                    break
+                    configuracion["Correo electrónico"] = mail
                 case "C":
-                    nroTel=int(input("Ingrese el nuevo número de célular: "))
+                    nroTel = int(input(colorama.Fore.LIGHTCYAN_EX +"Ingrese el nuevo número de celular: "+ colorama.Fore.RESET))
                     print("¡Número de celular modificado correctamente!") 
-                    configuracion["Célular"]=nroTel
-                    break
+                    configuracion["Celular"] = nroTel
                 case _: 
                     print("Opción no válida.")
         elif rta == 2:
             limpiarpantalla()
-            print(colorama.Fore.BLUE + "CBU: 0040888777532") 
-            print(colorama.Fore.BLUE + "Alias: PATO.CONEJO.PERRO")
-            input(colorama.Fore.RED + "Presione enter para continuar" + colorama.Fore.RESET)
-            menu()
+            print("CBU: 0040888777532") 
+            print("Alias: PATO.CONEJO.PERRO")
+            input("Presione enter para continuar")
         elif rta == 3:
             break
-     
+
     return
+
    
 
 def cargar_datosSaldo():
@@ -265,10 +257,10 @@ def ingresarContacto ():
     Retorno: sí, lista_contactos
 
     '''
-    nom=input("Ingrese el nombre de su contacto: ")
-    dni=int(input("Ingrese el DNI de su contacto: "))
-    alias=input("Ingrese el alias de su contacto:  ")
-    cbu=int(input("Ingrese el CBU de su contacto: "))
+    nom=input(colorama.Fore.LIGHTCYAN_EX + "Ingrese el nombre de su contacto: "+ colorama.Fore.RESET)
+    dni=int(input(colorama.Fore.LIGHTCYAN_EX +"Ingrese el DNI de su contacto: "+ colorama.Fore.RESET))
+    alias=input(colorama.Fore.LIGHTCYAN_EX +"Ingrese el alias de su contacto:  "+ colorama.Fore.RESET)
+    cbu=int(input(colorama.Fore.LIGHTCYAN_EX +"Ingrese el CBU de su contacto: "+ colorama.Fore.RESET))
     contacto={
         "Nombre": nom,
         "Alias": alias,
@@ -372,7 +364,7 @@ def transferir_dinero(dinero1):
     '''
     global saldo
     try:
-        dinero1=float(input("Indique la cantidad de dinero que desea transferir: "))
+        dinero1=float(input(colorama.Fore.LIGHTCYAN_EX +"Indique la cantidad de dinero que desea transferir: " + colorama.Fore.RESET))
         if dinero1 <=0: 
             print("Debe ingresar una cantidad mayor a $0")
             print ("Vuelva a intentar")
@@ -381,13 +373,13 @@ def transferir_dinero(dinero1):
             dinero1=dinero1*-1 #para convertir dinero en negativo y reste en el saldo
             saldo.append(dinero1)
             while True:
-                resp=input("¿Es correcto? s/n: ")
+                resp=input(colorama.Fore.LIGHTCYAN_EX +"¿Es correcto? s/n: " + colorama.Fore.RESET)
                 if resp.lower() == "s":
                     print("Transferencia realizada con éxito!!")
                     break
                 elif resp.lower() == "n":
                     saldo.pop()
-                    dinero1=float(input("Ingrese nuevamente el dinero a transferir: "))
+                    dinero1=float(input(colorama.Fore.LIGHTCYAN_EX +"Ingrese nuevamente el dinero a transferir: "+ colorama.Fore.RESET))
                     dinero1=dinero1*-1
                     saldo.append(dinero1)
                     print("Transferencia realizada con éxito!!")
@@ -455,18 +447,18 @@ def agenda_fras():
     Retorno: no retorna
     '''
     Facturas = cargar_datosAgenda()  
-    print(colorama.Fore.LIGHTCYAN_EX + "1 - Agendar servicios a pagar: ")
-    print(colorama.Fore.LIGHTCYAN_EX + "2 - Ver servicios a pagar: " + colorama.Fore.RESET)
+    print( "1 - Agendar servicios a pagar: ")
+    print( "2 - Ver servicios a pagar: " )
 
     rta = int(input("Seleccione una opción: "))
     if rta == 1:
         while True:
-            Fras1 = input("Ingrese la empresa a la cual pertenece la factura (o 'fin' para salir): ").capitalize()
+            Fras1 = input(colorama.Fore.LIGHTCYAN_EX +"Ingrese la empresa a la cual pertenece la factura (o 'fin' para salir): "+ colorama.Fore.RESET).capitalize()
             if Fras1.lower() == 'fin':
                 break
-            Fras2 = input("Ingrese a qué servicio pertenece: ").capitalize()
-            Fras3 = float(input("Ingrese el monto a pagar: "))
-            Fras4 = input("Ingrese el día que vence (DD/MM/AAAA): ")
+            Fras2 = input(colorama.Fore.LIGHTCYAN_EX +"Ingrese a qué servicio pertenece: "+ colorama.Fore.RESET).capitalize()
+            Fras3 = float(input(colorama.Fore.LIGHTCYAN_EX +"Ingrese el monto a pagar: "+ colorama.Fore.RESET))
+            Fras4 = input(colorama.Fore.LIGHTCYAN_EX +"Ingrese el día que vence (DD/MM/AAAA): "+ colorama.Fore.RESET)
             fras4 = datetime.datetime.strptime(Fras4, '%d/%m/%Y').strftime('%d/%m/%Y')
             #Utilizamos datetime.datetime.strptime para convertir la cadena de texto en un objeto datetime
             Facturas[Fras2] = {
@@ -488,6 +480,11 @@ def agenda_fras():
 
     
 #programa principal
+import os 
+import colorama
+import getpass #para que no se muestre la contraseña mientras estas escribiendo.
+import datetime
+import json
 colorama.init()
 saldo=cargar_datosSaldo()
 lista_contactos=cargar_datosContactos()
@@ -504,7 +501,7 @@ while verificar_persona() == True:
         elif op == 2:
             print("Ingresar dinero a cuenta")
             print("-" * 24)
-            dinero1 = float(input("Ingrese la cantidad de dinero a depositar: "))
+            dinero1 = float(input(colorama.Fore.LIGHTCYAN_EX +"Ingrese la cantidad de dinero a depositar: " + colorama.Fore.RESET))
             ingresar_dinero(dinero1)
             input(colorama.Fore.RED + "Presione enter para continuar" + colorama.Fore.RESET)
         elif op == 3:
